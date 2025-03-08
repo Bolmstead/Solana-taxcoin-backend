@@ -28,9 +28,14 @@ const {
   createMintToInstruction,
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountInstruction,
+  TYPE_SIZE,
+  LENGTH_SIZE,
 } = require("@solana/spl-token");
 const {
-  createInitializeMetadataInstruction,
+  createInitializeInstruction,
+  createUpdateFieldInstruction,
+  createRemoveKeyInstruction,
+  pack,
 } = require("@solana/spl-token-metadata");
 
 // Connect to Solana devnet
@@ -57,17 +62,28 @@ async function createMemeCoin() {
     const mint = mintKeypair.publicKey;
     console.log("Token mint address:", mint.toString());
 
-    // Include Metadata extension in mint length calculation
-    const metadataExtension = [
-      ExtensionType.TransferFeeConfig,
-      ExtensionType.MetadataPointer,
-    ];
-    // 3. Calculate total mint length with extensions
-    const mintLen = getMintLen(metadataExtension);
+    const metaData = {
+      updateAuthority: payer.publicKey,
+      mint: mint,
+      name: "Infinite Pwease Gwitch",
+      symbol: "IPG",
+      uri: "https://silver-hidden-bandicoot-567.mypinata.cloud/ipfs/bafybeiapgjpfvfjkm43haidwyikdyi23i76e2umpqg6yf5eltexdsdgym4",
+      additionalMetadata: [],
+    };
+    // Size of MetadataExtension 2 bytes for type, 2 bytes for length
+    const metadataExtension = TYPE_SIZE + LENGTH_SIZE;
+    // Size of metadata
+    const metadataLen = pack(metaData).length;
 
-    // 4. Calculate rent cost
+    // Size of Mint Account with extensions
+    const mintLen = getMintLen([
+      ExtensionType.MetadataPointer,
+      ExtensionType.TransferFeeConfig,
+    ]);
+
+    // Minimum lamports required for Mint Account
     const lamports = await connection.getMinimumBalanceForRentExemption(
-      mintLen
+      mintLen + metadataExtension + metadataLen
     );
 
     // 5. Create account for mint
@@ -108,7 +124,7 @@ async function createMemeCoin() {
       TOKEN_2022_PROGRAM_ID
     );
 
-    const initializeMetadataInstruction = createInitializeMetadataInstruction({
+    const initializeMetadataInstruction = createInitializeInstruction({
       metadata: mint,
       updateAuthority: payer.publicKey,
       mint: mint,
@@ -120,13 +136,20 @@ async function createMemeCoin() {
       additionalMetadata: [], // Add any additional metadata fields if needed
     });
 
+    const updateFieldInstruction = createUpdateFieldInstruction({
+      programId: TOKEN_2022_PROGRAM_ID, // Token Extension Program as Metadata Program
+      metadata: mint, // Account address that holds the metadata
+      updateAuthority: payer.publicKey, // Authority that can update the metadata
+    });
+
     // Create and send transaction
     const transaction = new Transaction().add(
       createAccountInstruction,
       initializeTransferFeeConfigInstruction,
       initializeMetadataPointerInstruction,
       initializeMintInstruction,
-      initializeMetadataInstruction
+      initializeMetadataInstruction,
+      updateFieldInstruction
     );
 
     // 9. Send and confirm transaction
