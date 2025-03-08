@@ -5,15 +5,11 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "deploy": "node src/deployCoin.js",
-    "mint": "node src/mintToken.js",
     "createWallet": "node src/helpers/createWallet.js",
     "checkBalance": "node src/helpers/checkBalance.js",
     "requestAirdrop": "node src/helpers/requestAirdrop.js",
-    "createTaxToken": "node src/claudeCreateTaxToken.js",
-    "tax": "node src/taxProgram.js",
-    "testTransfer": "node src/testTransfer.js"
+    "createTaxToken": "node src/scripts/createTaxToken.js",
+    "testTransfer": "node src/scripts/testTransfer.js"
   },
   "keywords": [],
   "author": "",
