@@ -129,9 +129,9 @@ async function createMemeCoin() {
       updateAuthority: payer.publicKey,
       mint: mint,
       mintAuthority: payer.publicKey,
-      name: TOKEN_NAME,
-      symbol: TOKEN_SYMBOL,
-      uri: TOKEN_URI,
+      name: metaData.name,
+      symbol: metaData.symbol,
+      uri: metaData.uri,
       programId: TOKEN_2022_PROGRAM_ID,
       additionalMetadata: [], // Add any additional metadata fields if needed
     });
