@@ -10,11 +10,19 @@
     "mint": "node src/mintToken.js",
     "createWallet": "node src/helpers/createWallet.js",
     "checkBalance": "node src/helpers/checkBalance.js",
-    "requestAirdrop": "node src/helpers/requestAirdrop.js"
+    "requestAirdrop": "node src/helpers/requestAirdrop.js",
+    "createTaxToken": "node src/claudeCreateTaxToken.js",
+    "tax": "node src/taxProgram.js",
+    "testTransfer": "node src/testTransfer.js"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
     "@solana/spl-token": "^0.4.13",
+    "@solana/spl-token-metadata": "^0.1.6",
     "@solana/web3.js": "^1.98.0",
     "bs58": "^6.0.0",
     "cors": "^2.8.5",
