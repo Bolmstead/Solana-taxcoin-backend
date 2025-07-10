@@ -1,4 +1,4 @@
-# Tax Memecoin Backend
+# Solana Taxcoin Backend
 
 A Node.js backend application for creating and managing tax memecoins on Solana, with reward tracking capabilities.
 
