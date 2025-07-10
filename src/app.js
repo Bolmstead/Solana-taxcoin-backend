@@ -20,11 +20,9 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
-const snapshotRoutes = require("./routes/snapshot.routes");
-const rewardsRoutes = require("./routes/rewards.routes");
+const infoRoutes = require("./routes/info.routes");
 
-app.use("/api/snapshots", snapshotRoutes);
-app.use("/api/rewards", rewardsRoutes);
+app.use("/info", infoRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
